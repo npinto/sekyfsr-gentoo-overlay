@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layman>
-    <overlay name="moonrise" quality="experimental" status="unofficial"
+    <overlay name="sekyfsr" quality="experimental" status="unofficial"
         type="git" src="git://github.com/npinto/sekyfsr-gentoo-overlay.git">
         <link>//github.com/npinto/sekyfsr-gentoo-overlay</link>
         <description> SEKYFSR Gentoo Overlay </description>
