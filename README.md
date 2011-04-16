@@ -1,6 +1,9 @@
 
 SEKYFSR (C) S.Laflamme
+
 Gentoo Overlay by Nicolas Pinto
+
+## Warning
 
 Use at your own risks -- be careful, it could break your leg.
 
