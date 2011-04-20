@@ -10,19 +10,16 @@ Use at your own risks -- be careful, it could break your leg.
 ## Installation
 
 ### Option 1: using layman
-#### 1. install layman:
+#### a. install layman:
     emerge layman
     echo 'source /var/lib/layman/make.conf' >> /etc/make.conf
-
-2. add the 'sekyfsr' overlay:
+#### b. add the 'sekyfsr' overlay:
     layman -a sekyfsr
-or: 
+or:
     layman -o https://github.com/npinto/sekyfsr-gentoo-overlay/raw/master/overlay.xml -f -a sekyfsr
-  
-3. sync overlays:
+#### c. sync overlays:
     layman -S
-
-4. install with:
+#### d. install:
     emerge package_name
 
 ### Option 2: manually
