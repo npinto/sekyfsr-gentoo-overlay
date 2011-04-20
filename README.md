@@ -10,7 +10,7 @@ Use at your own risks -- be careful, it could break your leg.
 ## Installation
 
 ### Option 1: using layman
-1. install layman:
+#### 1. install layman:
     emerge layman
     echo 'source /var/lib/layman/make.conf' >> /etc/make.conf
 
