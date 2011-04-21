@@ -27,7 +27,7 @@ src_compile() {
 
 src_install() {
 	exeinto /usr/bin
-	doexe cuda_memtest || die "doins failed"
-	doexe cuda_memtest_sm10 || die "doins failed"
-	doexe cuda_memtest_sm20 || die "doins failed"
+	doexe cuda_memtest || die "doexe failed"
+	doexe cuda_memtest_sm10 || die "doexe failed"
+	doexe cuda_memtest_sm20 || die "doexe failed"
 }
