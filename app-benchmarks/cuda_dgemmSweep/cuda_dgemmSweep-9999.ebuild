@@ -6,7 +6,7 @@ EAPI=3
 
 inherit git
 
-DESCRIPTION="DGEMM-based GPU burn-in / stress test (in CUDA)"
+DESCRIPTION="{S,D}GEMM-based GPU burn-in / stress test (in CUDA)"
 HOMEPAGE="http://forums.nvidia.com/index.php?showtopic=86624"
 EGIT_REPO_URI="https://github.com/npinto/cuda_dgemmSweep"
 
@@ -23,11 +23,11 @@ src_unpack() {
 }
 
 src_compile() {
-	emake all || die "emake all failed" 
+	emake all || die "emake all failed"
 }
 
 src_install() {
 	exeinto /usr/bin
-	doexe cuda_dgemmSweep || die "doexe failed"
-	doexe cuda_dgemmSweep_sm20 || die "doexe failed"
+	doexe cuda_sgemmSweep || die "doexe failed"
+	doexe cuda_dgemmSweep|| die "doexe failed"
 }
