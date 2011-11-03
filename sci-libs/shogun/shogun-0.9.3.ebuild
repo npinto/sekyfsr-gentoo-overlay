@@ -28,6 +28,7 @@ RDEPEND=""
 src_prepare() {
 	cd ${WORKDIR}/${P}
 	epatch ${FILESDIR}/${PN}-1.0.0-disable-ldconfig.patch
+	epatch ${FILESDIR}/${P}-fix-swig-version.patch
 }
 
 src_configure() {

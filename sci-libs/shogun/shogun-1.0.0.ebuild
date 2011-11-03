@@ -4,6 +4,8 @@
 
 inherit versionator
 
+EAPI="2"
+
 MY_PV=$(get_version_component_range 1-2)
 DESCRIPTION="Shogun is a large scale machine learning toolbox and focus on large scale kernel methods such as Support Vector Machines (SVM)"
 HOMEPAGE="http://shogun-toolbox.org"
@@ -26,11 +28,11 @@ python? ( dev-lang/python
          =dev-python/numpy-1* )"
 RDEPEND=""
 
-src_unpack() {
+src_prepare() {
 	unpack ${A}
 	cd ${WORKDIR}/${P}
 	epatch ${FILESDIR}/${P}-disable-ldconfig.patch
-	epatch ${FILESDIR}/arpack.cpp.patch
+	epatch ${FILESDIR}/${P}-disable-arpack.patch
 }
 
 src_compile() {
