@@ -2,6 +2,8 @@
 # $Header: $
 
 inherit versionator
+inherit python
+
 EAPI="2"
 
 MY_PV=$(get_version_component_range 1-2)
@@ -24,6 +26,13 @@ python? ( dev-lang/python
 glpk? ( sci-mathematics/glpk )
 "
 RDEPEND=""
+
+PYTHON_DEPEND="python? 2:2.6"
+
+pkg_setup() {
+	python_set_active_version 2
+	python_pkg_setup
+}
 
 src_prepare() {
 	cd ${WORKDIR}/${P}
@@ -50,19 +59,20 @@ src_configure() {
 	interfaces="${interfaces%?}"
 	echo ${interfaces}
 
-	./configure --prefix=/usr \
-				--mandir=/usr/share/man \
-				--datadir=/usr/share \
-				--libdir=/usr/lib64 \
+	./configure --prefix=${EPREFIX}/usr \
+				--mandir=${EPREFIX}/usr/share/man \
+				--datadir=${EPREFIX}/usr/share \
+				--libdir=${EPREFIX}/usr/lib64 \
+				--pydir=$(python_get_sitedir) \
 				--interfaces=${interfaces}
 }
 
 src_compile() {
 	cd ${WORKDIR}/${P}/src || die
-	emake || die "make failed. If the error is related to unfound CBLAS function, eselect sci-libs/gsl implementation of cblas."
+	emake || die
 }
 
 src_install() {
 	cd ${WORKDIR}/${P}/src || die
-	emake DESTDIR="${D}" install || die "make install failed."
+	emake DESTDIR="${D}" install || die
 }

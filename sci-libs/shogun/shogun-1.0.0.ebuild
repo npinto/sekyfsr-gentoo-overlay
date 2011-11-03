@@ -3,6 +3,7 @@
 # $Header: $
 
 inherit versionator
+inherit python
 
 EAPI="2"
 
@@ -27,6 +28,13 @@ octave? ( sci-mathematics/octave )
 python? ( dev-lang/python
          =dev-python/numpy-1* )"
 RDEPEND=""
+
+PYTHON_DEPEND="python? 2:2.6"
+
+pkg_setup() {
+	python_set_active_version 2
+	python_pkg_setup
+}
 
 src_prepare() {
 	unpack ${A}
@@ -61,11 +69,11 @@ src_compile() {
 
 	./configure \
 				--interfaces=${interfaces} \
-				--prefix=/usr \
-				--mandir=/usr/share/man \
-				--datadir=/usr/share \
-				--libdir=/usr/lib64 \
-				--incdir=/usr/include \
+				--prefix=${EPREFIX}/usr \
+				--mandir=${EPREFIX}/usr/share/man \
+				--datadir=${EPREFIX}/usr/share \
+				--libdir=${EPREFIX}/usr/lib64 \
+				--incdir=${EPREFIX}/usr/include \
 				--disable-arpack  # workaround for cblas_dsymv bug
 	emake || die "make failed. If the error is related to unfound CBLAS function, eselect sci-libs/gsl implementation of cblas."
 }
