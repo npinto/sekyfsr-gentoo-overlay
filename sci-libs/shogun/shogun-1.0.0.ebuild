@@ -19,11 +19,11 @@ IUSE="mono lua java R ruby octave python"
 DEPEND="
 sci-libs/gsl
 virtual/mpi
-mono? ( dev-lang/mono ) 
-lua? ( dev-lang/lua ) 
-R? ( dev-lang/R ) 
-ruby? ( dev-lang/ruby ) 
-octave? ( sci-mathematics/octave ) 
+mono? ( dev-lang/mono )
+lua? ( dev-lang/lua )
+R? ( dev-lang/R )
+ruby? ( dev-lang/ruby )
+octave? ( sci-mathematics/octave )
 python? ( dev-lang/python
          =dev-python/numpy-1* )"
 RDEPEND=""
@@ -32,7 +32,6 @@ src_prepare() {
 	unpack ${A}
 	cd ${WORKDIR}/${P}
 	epatch ${FILESDIR}/${P}-disable-ldconfig.patch
-	epatch ${FILESDIR}/${P}-disable-arpack.patch
 }
 
 src_compile() {
