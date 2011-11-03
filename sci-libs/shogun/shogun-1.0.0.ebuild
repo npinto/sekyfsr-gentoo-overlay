@@ -1,4 +1,4 @@
-<pre class="ebuild"># Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,7 +14,9 @@ SLOT="0"
 KEYWORDS="~x86 ~amd64"
 IUSE="mono lua java R ruby octave python"
 
-DEPEND="sci-libs/gsl
+DEPEND="
+sci-libs/gsl
+virtual/mpi
 mono? ( dev-lang/mono ) 
 lua? ( dev-lang/lua ) 
 R? ( dev-lang/R ) 
@@ -28,6 +30,7 @@ src_unpack() {
 	unpack ${A}
 	cd ${WORKDIR}/${P}
 	epatch ${FILESDIR}/${P}-disable-ldconfig.patch
+	epatch ${FILESDIR}/arpack.cpp.patch
 }
 
 src_compile() {
@@ -56,11 +59,13 @@ src_compile() {
 	echo ${interfaces}
 
 	./configure \
+				--interfaces=${interfaces} \
 				--prefix=/usr \
 				--mandir=/usr/share/man \
 				--datadir=/usr/share \
 				--libdir=/usr/lib64 \
-				--interfaces=${interfaces}
+				--incdir=/usr/include \
+				--disable-arpack  # workaround for cblas_dsymv bug
 	emake || die "make failed. If the error is related to unfound CBLAS function, eselect sci-libs/gsl implementation of cblas."
 }
 
@@ -69,4 +74,3 @@ src_install() {
 	emake DESTDIR="${D}" install || die "make install failed."
 }
 
-</pre><!-- ajax rendered in 0.0047 seconds -->
