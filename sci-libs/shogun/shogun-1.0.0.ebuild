@@ -71,13 +71,17 @@ src_configure() {
 	interfaces="${interfaces%?}"
 	echo ${interfaces}
 
+	libdir=${EPREFIX}/usr/$(get_libdir)
+	pydir=$(echo $(python_get_sitedir) | sed -e "s;${libdir}/;;g")
+
 	confopts=""
 	confopts="${confopts} --interfaces=${interfaces}"
 	confopts="${confopts} --prefix=${EPREFIX}/usr"
 	confopts="${confopts} --mandir=${EPREFIX}/usr/share/man"
 	confopts="${confopts} --datadir=${EPREFIX}/usr/share"
-	confopts="${confopts} --libdir=${EPREFIX}/usr/$(get_libdir)"
+	confopts="${confopts} --libdir=${libdir}"
 	confopts="${confopts} --incdir=${EPREFIX}/usr/include"
+	confopts="${confopts} --pydir=${pydir}"
 
 	# -------------------------------------------------------
 	# Fix MPI linking issues,

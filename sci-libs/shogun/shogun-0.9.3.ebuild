@@ -63,13 +63,16 @@ src_configure() {
 	interfaces="${interfaces%?}"
 	echo ${interfaces}
 
+	libdir=${EPREFIX}/usr/$(get_libdir)
+	pydir=$(echo $(python_get_sitedir) | sed -e "s;${libdir}/;;g")
+
 	./configure \
 	--interfaces=${interfaces} \
 	--prefix=${EPREFIX}/usr \
 	--mandir=${EPREFIX}/usr/share/man \
 	--datadir=${EPREFIX}/usr/share \
-	--libdir=${EPREFIX}/usr/$(get_libdir) \
-	--pydir=$(python_get_sitedir) \
+	--libdir=${libdir} \
+	--pydir=${pydir} \
 	--disable-hdf5
 }
 
