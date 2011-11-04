@@ -1,6 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+inherit multilib
 inherit versionator
 inherit python
 
@@ -9,7 +10,9 @@ EAPI="2"
 MY_PV=$(get_version_component_range 1-2)
 DESCRIPTION="Shogun is a large scale machine learning toolbox and focus on large scale kernel methods such as Support Vector Machines (SVM)"
 HOMEPAGE="http://shogun-toolbox.org"
-SRC_URI="http://shogun-toolbox.org/archives/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
+#SRC_URI="http://shogun-toolbox.org/archives/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
+SRC_URI="ftp://shogun-toolbox.org/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
+#SRC_URI="https://github.com/shogun-toolbox/shogun/tarball/shogun_0.9.3"
 
 LICENSE=""
 SLOT="0"
@@ -18,6 +21,7 @@ IUSE="mono lua java R ruby octave python glpk"
 
 DEPEND="
 sci-libs/gsl
+sci-mathematics/glpk
 R? ( dev-lang/R )
 ruby? ( dev-lang/ruby )
 octave? ( sci-mathematics/octave )
@@ -59,12 +63,14 @@ src_configure() {
 	interfaces="${interfaces%?}"
 	echo ${interfaces}
 
-	./configure --prefix=${EPREFIX}/usr \
-				--mandir=${EPREFIX}/usr/share/man \
-				--datadir=${EPREFIX}/usr/share \
-				--libdir=${EPREFIX}/usr/lib64 \
-				--pydir=$(python_get_sitedir) \
-				--interfaces=${interfaces}
+	./configure \
+	--interfaces=${interfaces} \
+	--prefix=${EPREFIX}/usr \
+	--mandir=${EPREFIX}/usr/share/man \
+	--datadir=${EPREFIX}/usr/share \
+	--libdir=${EPREFIX}/usr/$(get_libdir) \
+	--pydir=$(python_get_sitedir) \
+	--disable-hdf5
 }
 
 src_compile() {

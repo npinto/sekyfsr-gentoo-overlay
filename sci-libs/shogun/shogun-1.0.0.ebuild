@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+inherit multilib
 inherit versionator
 inherit python
 
@@ -10,7 +11,10 @@ EAPI="2"
 MY_PV=$(get_version_component_range 1-2)
 DESCRIPTION="Shogun is a large scale machine learning toolbox and focus on large scale kernel methods such as Support Vector Machines (SVM)"
 HOMEPAGE="http://shogun-toolbox.org"
-SRC_URI="http://shogun-toolbox.org/archives/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
+#SRC_URI="http://shogun-toolbox.org/archives/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
+SRC_URI="ftp://shogun-toolbox.org/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
+#SRC_URI="https://github.com/shogun-toolbox/shogun/tarball/shogun_1.0.0"
+#SRC_URI=ftp://shogun-toolbox.org/shogun/releases/1.0/sources/shogun-1.0.0.tar.bz2
 
 LICENSE=""
 SLOT="0"
@@ -19,7 +23,7 @@ IUSE="mono lua java R ruby octave python"
 
 DEPEND="
 sci-libs/gsl
-virtual/mpi
+sci-mathematics/glpk
 mono? ( dev-lang/mono )
 lua? ( dev-lang/lua )
 R? ( dev-lang/R )
@@ -42,7 +46,7 @@ src_prepare() {
 	epatch ${FILESDIR}/${P}-disable-ldconfig.patch
 }
 
-src_compile() {
+src_configure() {
 	cd ${WORKDIR}/${P}/src || die
 
 	interfaces=""
@@ -67,19 +71,41 @@ src_compile() {
 	interfaces="${interfaces%?}"
 	echo ${interfaces}
 
-	./configure \
-				--interfaces=${interfaces} \
-				--prefix=${EPREFIX}/usr \
-				--mandir=${EPREFIX}/usr/share/man \
-				--datadir=${EPREFIX}/usr/share \
-				--libdir=${EPREFIX}/usr/lib64 \
-				--incdir=${EPREFIX}/usr/include \
-				--disable-arpack  # workaround for cblas_dsymv bug
-	emake || die "make failed. If the error is related to unfound CBLAS function, eselect sci-libs/gsl implementation of cblas."
+	confopts=""
+	confopts="${confopts} --interfaces=${interfaces}"
+	confopts="${confopts} --prefix=${EPREFIX}/usr"
+	confopts="${confopts} --mandir=${EPREFIX}/usr/share/man"
+	confopts="${confopts} --datadir=${EPREFIX}/usr/share"
+	confopts="${confopts} --libdir=${EPREFIX}/usr/$(get_libdir)"
+	confopts="${confopts} --incdir=${EPREFIX}/usr/include"
+
+	# -------------------------------------------------------
+	# Fix MPI linking issues,
+	# see https://github.com/shogun-toolbox/shogun/issues/323
+	#confopts="${confopts} --ldflags='-lmpi -lmpi_cxx'"
+
+	# -------------------------------------------------------
+	# Fix BLAS related problem with arpack
+	# (workaround for cblas_dsymv bug)
+	# see http://comments.gmane.org/gmane.comp.ai.machine-learning.shogun/2319
+	confopts="${confopts} --disable-arpack"
+
+	# -------------------------------------------------------
+	# FIX: XXX
+	confopts="${confopts} --disable-hdf5"
+	# -------------------------------------------------------
+
+	./configure ${confopts} || die
+
+}
+
+src_compile() {
+	cd ${WORKDIR}/${P}/src || die
+	emake || die
 }
 
 src_install() {
 	cd ${WORKDIR}/${P}/src || die
-	emake DESTDIR="${D}" install || die "make install failed."
+	emake DESTDIR="${D}" install || die
 }
 
