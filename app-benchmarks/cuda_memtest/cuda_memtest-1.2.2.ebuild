@@ -16,13 +16,16 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND=">=dev-util/nvidia-cuda-toolkit-3.2"
+DEPEND="
+>=dev-util/nvidia-cuda-toolkit-4.0
+sys-devel/gcc:4.4
+"
 RDEPEND="${DEPEND}"
 
 src_compile() {
-	emake || die "emake failed" 
-	emake cuda_memtest_sm10 || die "emake cudamemtest_sm10 failed" 
-	emake cuda_memtest_sm20 || die "emake cudamemtest_sm20 failed" 
+	emake || die "emake failed"
+	emake cuda_memtest_sm10 || die "emake cudamemtest_sm10 failed"
+	emake cuda_memtest_sm20 || die "emake cudamemtest_sm20 failed"
 }
 
 src_install() {
