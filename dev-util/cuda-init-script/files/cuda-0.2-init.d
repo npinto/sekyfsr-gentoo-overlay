@@ -41,9 +41,7 @@ function nodes_create() {
 }
 
 function compute_mode() {
-    echo ${CUDA_COMPUTE_MODE}
     export CUDA_COMPUTE_MODE=${CUDA_COMPUTE_MODE-DEFAULT}
-    echo ${CUDA_COMPUTE_MODE}
     nvidia-smi -c ${CUDA_COMPUTE_MODE}
 }
 

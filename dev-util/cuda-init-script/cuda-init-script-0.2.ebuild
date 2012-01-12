@@ -13,4 +13,5 @@ RDEPEND="x11-drivers/nvidia-drivers"
 
 src_install() {
     newinitd "${FILESDIR}/cuda-${PV}-init.d" "cuda"
+    newconfd "${FILESDIR}/cuda-${PV}-conf.d" "cuda"
 }
