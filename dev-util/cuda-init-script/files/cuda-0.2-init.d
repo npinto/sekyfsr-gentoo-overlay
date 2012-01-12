@@ -2,7 +2,7 @@
 
 # Inspired by http://forums.nvidia.com/index.php?showtopic=52629
 
-description="Create NVIDIA device nodes in /dev"
+description="Create and configure NVIDIA device nodes in /dev"
 
 # opts="${opts} module_is_loaded"
 
