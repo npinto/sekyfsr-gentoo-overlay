@@ -1,0 +1,44 @@
+# ChangeLog for dev-python/pymongo
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-python/pymongo/ChangeLog,v 1.8 2011/12/13 17:47:42 ultrabug Exp $
+
+*pymongo-2.1 (13 Dec 2011)
+
+  13 Dec 2011; Ultrabug <ultrabug@gentoo.org> -pymongo-1.11-r1.ebuild,
+  +pymongo-2.1.ebuild:
+  Version bump, drop old
+
+*pymongo-2.0.1 (19 Aug 2011)
+
+  19 Aug 2011; Ultrabug <ultrabug@gentoo.org> -pymongo-1.10.1.ebuild,
+  -pymongo-1.11.ebuild, +pymongo-2.0.1.ebuild:
+  Version bump, drop old.
+
+  08 Aug 2011; Markos Chandras <hwoarang@gentoo.org> pymongo-1.11-r1.ebuild:
+  Ignore test failures with Jython. Update HOMEPAGE. Fix dependencies. Set
+  PYTHON_MODNAME. Improve src_test(). Simplify src_install(). Patch by
+  Arfrever. Backported from python overlay
+
+  06 Aug 2011; Markos Chandras <hwoarang@gentoo.org> ChangeLog:
+  Restore Changelog history
+
+*pymongo-1.11-r1 (06 Jul 2011)
+
+  06 Jul 2011; Ultrabug <ultrabug@gentoo.org> +pymongo-1.11-r1.ebuild,
+  metadata.xml:
+  Add mod_wsgi to IUSE to fix working problems with mod_wsgi.
+
+*pymongo-1.11 (12 May 2011)
+
+  12 May 2011; Ultrabug <ultrabug@gentoo.org> +pymongo-1.11.ebuild:
+  Version bump, thanks to Mohamed Elmi Guessod for spotting.
+
+  26 Apr 2011; Ultrabug <ultrabug@gentoo.org> pymongo-1.10.1.ebuild:
+  Add a warning for test phase, wrt #364671.
+
+*pymongo-1.10.1 (11 Apr 2011)
+
+  11 Apr 2011; Ultrabug <ultrabug@gentoo.org> +pymongo-1.10.1.ebuild,
+  +metadata.xml:
+  initial import from sunrise, ebuild written by Johan Bergström.
+
