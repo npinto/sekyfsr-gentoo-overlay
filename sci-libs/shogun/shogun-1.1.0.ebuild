@@ -109,3 +109,4 @@ src_install() {
 	cd ${WORKDIR}/${P}/src || die
 	emake DESTDIR="${D}" install || die
 }
+
