@@ -27,7 +27,8 @@ R? ( dev-lang/R )
 ruby? ( dev-lang/ruby )
 octave? ( sci-mathematics/octave )
 python? ( dev-lang/python
-         =dev-python/numpy-1* )"
+          dev-lang/swig
+          =dev-python/numpy-1* )"
 RDEPEND=""
 
 PYTHON_DEPEND="python? 2:2.6"
