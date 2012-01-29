@@ -1,5 +1,5 @@
 
-SEKYFSR (C) S.Laflamme
+SEKYFSR (C) Prof. S
 
 Gentoo Overlay by Nicolas Pinto
 
