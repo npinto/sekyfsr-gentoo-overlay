@@ -32,7 +32,7 @@ S="${WORKDIR}"
 RESTRICT="binchecks"
 
 pkg_setup() {
-	if use cuda || use opencl && [ "$(gcc-major-version)" <= "4" -o $(gcc-minor-version) -lt 5 ]; then
+	if use cuda || use opencl && [ "$(gcc-major-version)" -le "4" -o $(gcc-minor-version) -lt 5 ]; then
 		eerror "This package requires >=sys-devel/gcc-4.5 to build sucessfully."
 		eerror "Please use gcc-config to switch to a compatible GCC version."
 		die ">=sys-devel/gcc-4.5 required"
