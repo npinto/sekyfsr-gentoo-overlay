@@ -23,9 +23,9 @@ DEPEND="dev-python/setuptools
 	dev-python/pytest"
 RDEPEND="${DEPEND}"
 
-#src_test() {
-	#testing() {
-		#py.test -x
-	#}
-	#python_execute_function testing
-#}
+src_test() {
+	testing() {
+		py.test -x
+	}
+	python_execute_function testing
+}
