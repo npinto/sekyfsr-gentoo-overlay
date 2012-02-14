@@ -1,0 +1,13 @@
+--- tests/test_mkvirtualenv.sh  2012-01-30 08:11:42.000000000 -0500
++++ tests/test_mkvirtualenv.sh  2012-02-14 18:00:40.365343184 -0500
+@@ -59,8 +59,8 @@
+ 
+ test_no_virtualenv () {
+     old_path="$PATH"
+-    PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+-    assertFalse "Found virtualenv in $(which virtualenv)" "which virtualenv"
++    PATH="/bin:/usr/sbin:/sbin"
++    assertFalse "Found virtualenv in $(/usr/bin/which virtualenv)" "/usr/bin/which virtualenv"
+     mkvirtualenv should_not_be_created 2>/dev/null
+     RC=$?
+     # Restore the path before testing because

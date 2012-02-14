@@ -7,6 +7,7 @@ EAPI=4
 PYTHON_DEPEND="*"
 SUPPORT_PYTHON_ABIS="1"
 
+inherit eutils
 inherit distutils
 inherit python
 
@@ -24,14 +25,24 @@ DEPEND="${DEPEND}
 	dev-python/setuptools
 	test? ( dev-python/tox )"
 
+src_prepare() {
+	epatch ${FILESDIR}/${P}-pathfix.patch
+
+	cp -r ${FILESDIR}/testpackage ./tests/
+	cp ${FILESDIR}/tox.ini .
+	for f in tests/test_*sh; do
+		chmod +x ${f};
+	done;
+}
 
 src_test() {
+
 	testing() {
 		PYTHON_MAJOR="$(python_get_version --major)"
 		PYTHON_MINOR="$(python_get_version --minor)"
-		cp ${FILESDIR}/tox.ini .
 		export TMPDIR=${T}
-		tox -e py${PYTHON_MAJOR}${PYTHON_MINOR} tests/test_cp.sh
+		tox -e py${PYTHON_MAJOR}${PYTHON_MINOR} tests/test_mkvirtualenv.sh
 	}
+
 	python_execute_function testing
 }
