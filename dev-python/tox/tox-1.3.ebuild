@@ -22,3 +22,10 @@ DEPEND="dev-python/setuptools
 	dev-python/virtualenv
 	dev-python/pytest"
 RDEPEND="${DEPEND}"
+
+#src_test() {
+	#testing() {
+		#py.test -x
+	#}
+	#python_execute_function testing
+#}
