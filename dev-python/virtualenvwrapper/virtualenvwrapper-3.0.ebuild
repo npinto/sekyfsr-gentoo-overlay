@@ -30,7 +30,8 @@ src_test() {
 		PYTHON_MAJOR="$(python_get_version --major)"
 		PYTHON_MINOR="$(python_get_version --minor)"
 		cp ${FILESDIR}/tox.ini .
-		tox -e py${PYTHON_MAJOR}${PYTHON_MINOR}
+		export TMPDIR=${T}
+		tox -e py${PYTHON_MAJOR}${PYTHON_MINOR} tests/test_cp.sh
 	}
 	python_execute_function testing
 }

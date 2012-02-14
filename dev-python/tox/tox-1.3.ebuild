@@ -18,5 +18,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="dev-python/setuptools dev-python/virtualenv dev-python/pytest"
+DEPEND="dev-python/setuptools
+	dev-python/virtualenv
+	dev-python/pytest"
 RDEPEND="${DEPEND}"
