@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~amd64-linux ~ia64-linux ~x86-linux ~ppc-macos ~x86-macos"
 IUSE=""
 
-RDEPEND=">=dev-python/py-1.4.5"
+RDEPEND=">=dev-python/py-1.4.7"
 DEPEND="${RDEPEND}
 	app-arch/unzip
 	dev-python/setuptools"
