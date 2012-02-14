@@ -21,8 +21,8 @@ IUSE=""
 
 RDEPEND="dev-python/virtualenv"
 DEPEND="${DEPEND}
-dev-python/setuptools
-test? ( dev-python/tox )"
+	dev-python/setuptools
+	test? ( dev-python/tox )"
 
 
 src_test() {
