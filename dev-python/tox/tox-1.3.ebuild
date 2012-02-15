@@ -20,7 +20,7 @@ IUSE=""
 
 DEPEND="dev-python/setuptools
 	dev-python/virtualenv
-	>=dev-python/pytest-2.3"
+	test? ( >=dev-python/pytest-2.3 )"
 RDEPEND="${DEPEND}"
 
 src_test() {
