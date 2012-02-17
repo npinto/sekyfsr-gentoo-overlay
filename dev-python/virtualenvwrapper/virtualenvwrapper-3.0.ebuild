@@ -29,7 +29,9 @@ src_prepare() {
 	epatch ${FILESDIR}/${P}-pathfix.patch
 
 	cp -r ${FILESDIR}/testpackage ./tests/
+
 	cp ${FILESDIR}/tox.ini .
+
 	for f in tests/test_*sh; do
 		chmod +x ${f};
 	done;
@@ -41,8 +43,21 @@ src_test() {
 		PYTHON_MAJOR="$(python_get_version --major)"
 		PYTHON_MINOR="$(python_get_version --minor)"
 		export TMPDIR=${T}
-		tox -e py${PYTHON_MAJOR}${PYTHON_MINOR} tests/test_mkvirtualenv.sh
+		tox -e py${PYTHON_MAJOR}${PYTHON_MINOR}
 	}
 
 	python_execute_function testing
+}
+
+src_install() {
+
+	# Bug #404103
+	touch __init__.py
+	installation() {
+		insinto $(python_get_sitedir)/${PN}
+		doins ${files} __init__.py
+	}
+	python_execute_function installation
+
+	distutils_src_install
 }
