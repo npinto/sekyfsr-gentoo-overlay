@@ -76,14 +76,25 @@ intel-sdp_pkg_setup() {
 			INTEL_ARCH="intel64 ia32"
 		fi
 	fi
+
 	INTEL_RPMS=""
+
 	for p in ${INTEL_BIN_RPMS}; do
 		for a in ${arch}; do
 			INTEL_RPMS="${INTEL_RPMS} intel-${p}-${INTEL_PV4}-${INTEL_PV1}.${INTEL_PV2}-${INTEL_PV3}.${a}.rpm"
 		done
 	done
+	for p in ${INTEL_EXTRA_BIN_RPMS}; do
+		for a in ${arch}; do
+			INTEL_RPMS="${INTEL_RPMS} ${p}.${a}.rpm"
+		done
+	done
+
 	for p in ${INTEL_DAT_RPMS}; do
 		INTEL_RPMS="${INTEL_RPMS} intel-${p}-${INTEL_PV4}-${INTEL_PV1}.${INTEL_PV2}-${INTEL_PV3}.noarch.rpm"
+	done
+	for p in ${INTEL_EXTRA_DAT_RPMS}; do
+		INTEL_RPMS="${INTEL_RPMS} ${p}.noarch.rpm"
 	done
 
 	case "${EAPI:-0}" in
