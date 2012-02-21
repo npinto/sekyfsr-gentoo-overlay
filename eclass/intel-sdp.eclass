@@ -119,7 +119,8 @@ intel-sdp_src_unpack() {
 			mv ${l} opt/intel/ || die "failed moving extract log file"
 		done
 	done
-	mv -v opt/intel/* ${INTEL_SDP_DIR} || die "mv to INTEL_SDP_DIR failed"
+	#chmod -vR 555 opt/intel/*
+	mv opt/intel/* ${INTEL_SDP_DIR} || die "mv to INTEL_SDP_DIR failed"
 }
 
 intel_link_eclipse_plugins() {
@@ -154,6 +155,7 @@ intel-sdp_src_install() {
 		-e "s:<.*DIR>:${INTEL_SDP_EDIR}:g" \
 		'{}' \;
 	mkdir -p "${ED:-${D}}"/ || die
+	chmod -vR 555 opt || die
 	mv opt "${ED:-${D}}"/ || die "moving files failed"
 }
 
