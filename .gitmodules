@@ -1,0 +1,3 @@
+[submodule "external/science"]
+	path = external/science
+	url = git://git.overlays.gentoo.org/proj/sci.git
