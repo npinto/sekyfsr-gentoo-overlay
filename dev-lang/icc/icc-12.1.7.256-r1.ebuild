@@ -26,21 +26,22 @@ QA_PREBUILT="
 	${INTEL_SDP_DIR}/mpirt/bin/*/*
 	${INTEL_SDP_DIR}/mpirt/lib/*/*
 	mkl? ( ${INTEL_SDP_DIR}/mkl/bin/*/* ${INTEL_SDP_DIR}/mkl/lib/*/*
+	ipp? ( ${INTEL_SDP_DIR}/ipp/bin/*/* ${INTEL_SDP_DIR}/ipp/lib/*/*
+	tbb? ( ${INTEL_SDP_DIR}/tbb/bin/*/* ${INTEL_SDP_DIR}/tbb/lib/*/*
 	"
 QA_PRESTRIPPED="${INTEL_SDP_DIR}/compiler/lib/*/.*libFNP.so"
 
-#INTEL_BIN_RPMS="compilerproc compilerproc-devel"
-#INTEL_DAT_RPMS="compilerproc-common"
-#INTEL_BIN_RPMS="compilerproc"
-INTEL_BIN_RPMS=""
-INTEL_DAT_RPMS=""
+INTEL_BIN_RPMS="compilerproc compilerproc-devel"
+INTEL_DAT_RPMS="compilerproc-common"
+INTEL_BIN_RPMS="compilerproc"
+#INTEL_BIN_RPMS=""
+#INTEL_DAT_RPMS=""
 
 pkg_setup() {
 	INTEL_EXTRA_BIN_RPMS=""
 	if use mkl; then
 		INTEL_EXTRA_BIN_RPMS="${INTEL_EXTRA_BIN_RPMS} intel-mkl-sp1-${INTEL_PV4}-10.3-7 intel-mkl-sp1-devel-${INTEL_PV4}-10.3-7"
 		INTEL_EXTRA_DAT_RPMS="${INTEL_EXTRA_DAT_RPMS} intel-mkl-sp1-common-${INTEL_PV4}-10.3-7"
-		#QA_PREBUILT="${QA_PREBUILT} ${INTEL_SDP_DIR}/mkl/bin/*/* ${INTEL_SDP_DIR}/mkl/lib/*/*"
 	fi
 	if use ipp; then
 		INTEL_EXTRA_BIN_RPMS="${INTEL_EXTRA_BIN_RPMS} intel-ipp-sp1-${INTEL_PV4}-7.0-5 intel-ipp-sp1-devel-${INTEL_PV4}-7.0-5"
