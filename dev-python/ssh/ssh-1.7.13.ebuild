@@ -25,5 +25,6 @@ DEPEND="
 "
 RDEPEND="
 	${DEPEND}
-	>=dev-python/pycrypto-2.5
+	>=dev-python/pycrypto-2.3
+	!=dev-python/pycrypto-2.5
 "
