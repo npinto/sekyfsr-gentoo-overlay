@@ -14,7 +14,7 @@ inherit intel-sdp
 DESCRIPTION="Intel C/C++ Compiler"
 HOMEPAGE="http://software.intel.com/en-us/articles/intel-composer-xe/"
 
-IUSE="eclipse mkl ipp tbb"
+IUSE="eclipse idb mkl ipp tbb"
 
 DEPEND="~dev-libs/intel-common-${PV}[compiler]"
 RDEPEND="${DEPEND}
@@ -25,9 +25,10 @@ QA_PREBUILT="
 	${INTEL_SDP_DIR}/compiler/lib/*/*
 	${INTEL_SDP_DIR}/mpirt/bin/*/*
 	${INTEL_SDP_DIR}/mpirt/lib/*/*
-	mkl? ( ${INTEL_SDP_DIR}/mkl/bin/*/* ${INTEL_SDP_DIR}/mkl/lib/*/*
-	ipp? ( ${INTEL_SDP_DIR}/ipp/bin/*/* ${INTEL_SDP_DIR}/ipp/lib/*/*
-	tbb? ( ${INTEL_SDP_DIR}/tbb/bin/*/* ${INTEL_SDP_DIR}/tbb/lib/*/*"
+	idb? ( ${INTEL_SDP_DIR}/debugger/lib/*/* )
+	mkl? ( ${INTEL_SDP_DIR}/mkl/bin/*/* ${INTEL_SDP_DIR}/mkl/lib/*/* )
+	ipp? ( ${INTEL_SDP_DIR}/ipp/bin/*/* ${INTEL_SDP_DIR}/ipp/lib/*/* )
+	tbb? ( ${INTEL_SDP_DIR}/tbb/bin/*/* ${INTEL_SDP_DIR}/tbb/lib/*/* )"
 QA_PRESTRIPPED="${INTEL_SDP_DIR}/compiler/lib/*/.*libFNP.so"
 
 INTEL_BIN_RPMS="compilerproc compilerproc-devel"
@@ -35,6 +36,10 @@ INTEL_DAT_RPMS="compilerproc-common"
 
 pkg_setup() {
 	INTEL_EXTRA_BIN_RPMS=""
+	if use idb; then
+		INTEL_BIN_RPMS="${INTEL_BIN_RPMS} idb"
+		INTEL_DAT_RPMS="${INTEL_DAT_RPMS} idb-common idbcdt"
+	fi
 	if use mkl; then
 		INTEL_EXTRA_BIN_RPMS="${INTEL_EXTRA_BIN_RPMS} intel-mkl-sp1-${INTEL_PV4}-10.3-9 intel-mkl-sp1-devel-${INTEL_PV4}-10.3-9"
 		INTEL_EXTRA_DAT_RPMS="${INTEL_EXTRA_DAT_RPMS} intel-mkl-sp1-common-${INTEL_PV4}-10.3-9"
