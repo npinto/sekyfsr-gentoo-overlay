@@ -28,7 +28,7 @@ RDEPEND=">=sys-devel/gcc-4.2.0
 
 src_unpack() {
 	unpack ${A}
-	#mkdir -p "${S}"
+
 	mv "${WORKDIR}/.dropbox-dist" "${S}" || die
 	rm "${S}"/libstdc++.so.6
 
