@@ -34,6 +34,8 @@ src_unpack() {
 
 	# FIX "ImportError: cannot import name _clearcache"
 	rm "${S}"/_struct.so
+	# FIX "ImportError: cannot import name reduce"
+	rm "${S}"/_functools.so
 }
 
 src_install() {
