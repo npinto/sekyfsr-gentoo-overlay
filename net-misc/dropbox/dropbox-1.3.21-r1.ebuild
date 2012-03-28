@@ -33,12 +33,16 @@ src_unpack() {
 	rm "${S}"/libstdc++.so.6
 
 	# FIX "ImportError: cannot import name _clearcache"
-	rm "${S}"/_struct.so
+	mv "${S}"/_struct.so{,.tmp} || die
 	# FIX "ImportError: cannot import name reduce"
-	rm "${S}"/_functools.so
+	mv "${S}"/_functools.so{,.tmp} || die
 }
 
 src_install() {
+	# FIX: revert temporary moves from src_unpack
+	mv _struct.so{.tmp,} || die
+	mv _functools.so{.tmp,} || die
+
 	dodoc README ACKNOWLEDGEMENTS
 	rm README ACKNOWLEDGEMENTS || die
 
@@ -48,6 +52,7 @@ src_install() {
 	fperms a+x "${targetdir}/dropbox"
 	fperms a+x "${targetdir}/dropboxd"
 	dosym "${targetdir}/dropboxd" "/opt/bin/dropbox"
+
 
 	insinto /usr/share
 	doins -r icons
