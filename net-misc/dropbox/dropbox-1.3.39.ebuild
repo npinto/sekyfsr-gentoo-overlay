@@ -1,0 +1,71 @@
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI="4"
+
+inherit gnome2-utils
+
+DESCRIPTION="Dropbox daemon (pretends to be GUI-less)."
+HOMEPAGE="http://dropbox.com/"
+SRC_URI="x86? ( http://dl-web.dropbox.com/u/17/dropbox-lnx.x86-${PV}.tar.gz )
+	amd64? ( http://dl-web.dropbox.com/u/17/dropbox-lnx.x86_64-${PV}.tar.gz )"
+
+LICENSE="CCPL-Attribution-NoDerivs-3.0 FTL MIT LGPL-2 openssl dropbox"
+SLOT="0"
+KEYWORDS="~amd64 ~x86"
+IUSE=""
+RESTRICT="mirror strip"
+
+QA_DT_HASH="opt/${PN}/.*"
+QA_EXECSTACK_x86="opt/dropbox/_ctypes.so"
+QA_EXECSTACK_amd64="opt/dropbox/_ctypes.so"
+
+DEPEND=""
+# Be sure to have GLIBCXX_3.4.9, #393125
+RDEPEND=">=sys-devel/gcc-4.2.0
+	net-misc/wget"
+
+src_unpack() {
+	unpack ${A}
+
+	mv "${WORKDIR}/.dropbox-dist" "${S}" || die
+	rm "${S}"/libstdc++.so.6
+
+	# FIX "ImportError: cannot import name _clearcache"
+	mv "${S}"/_struct.so{,.tmp} || die
+	# FIX "ImportError: cannot import name reduce"
+	mv "${S}"/_functools.so{,.tmp} || die
+}
+
+src_install() {
+	# FIX: revert temporary moves from src_unpack
+	mv _struct.so{.tmp,} || die
+	mv _functools.so{.tmp,} || die
+
+	dodoc README ACKNOWLEDGEMENTS
+	rm README ACKNOWLEDGEMENTS || die
+
+	local targetdir="/opt/dropbox"
+	insinto "${targetdir}"
+	doins -r *
+	fperms a+x "${targetdir}/dropbox"
+	fperms a+x "${targetdir}/dropboxd"
+	dosym "${targetdir}/dropboxd" "/opt/bin/dropbox"
+
+
+	insinto /usr/share
+	doins -r icons
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
+}
