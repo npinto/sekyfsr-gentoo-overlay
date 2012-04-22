@@ -31,10 +31,6 @@ PYTHON_CFLAGS=("2.* + -fno-strict-aliasing")
 DOCS="README.txt ToDo.txt USAGE.txt"
 PYTHON_MODNAME="Cython cython.py pyximport"
 
-#src_prepare() {
-	#epatch "${FILESDIR}"/${PV}-test.patch
-#}
-
 src_test() {
 	testing() {
 		"$(PYTHON)" runtests.py -vv --work-dir tests-${PYTHON_ABI}
