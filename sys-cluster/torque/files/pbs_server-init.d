@@ -2,14 +2,15 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-. /etc/conf.d/torque 
+. /etc/conf.d/torque
 PBS_SERVER_HOME="$(. /etc/env.d/25torque; echo ${PBS_SERVER_HOME})"
 
 depend() {
-    need net
-    before pbs_sched
-    before pbs_mom
+    local _need="net"
+    before pbs_sched pbs_mom
     after logger
+    [ ${PBS_USE_MUNGE} -ne 0 ] && _need="${_need} munged"
+    need ${_need}
 }
 
 checkconfig() {
@@ -53,8 +54,15 @@ stop() {
         ewarn "PBS_SERVER_STOP is not defined, defaulting to quick"
         stop_type=quick
     fi
-
-    /usr/bin/qterm -t ${stop_type} || start-stop-daemon --stop -p ${PBS_SERVER_HOME}/server_priv/server.lock
-    eend ${?}
+    
+    # workaround bogus 141 code
+    /usr/bin/qterm -t ${stop_type}
+    ret=$?
+    [[ ${ret} -eq 141 ]] && ret=0
+    [[ ${ret} -gt 0 ]] && {
+        start-stop-daemon --stop -p ${PBS_SERVER_HOME}/server_priv/server.lock
+        ret=$?
+    }
+    eend ${ret}
 }
 # vim:ts=4

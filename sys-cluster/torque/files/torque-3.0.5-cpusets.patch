@@ -1,0 +1,176 @@
+--- torque-3.0.4/src/resmom/linux/cpuset.c.orig	2011-07-13 02:07:28.000000000 +0400
++++ torque-3.0.4/src/resmom/linux/cpuset.c	2012-05-01 06:10:46.793651949 +0400
+@@ -37,6 +37,13 @@
+ extern int num_numa_nodes;
+ #endif /* NUMA_SUPPORT */
+ 
++#include <linux/version.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,0,0)
++#define CPUSET_PREFIX "cpuset."
++#else
++#define CPUSET_PREFIX ""
++#endif
++
+ extern long system_ncpus;
+ 
+ /* FIXME: TODO:  TTORQUECPUSET_PATH, enabling cpuset support, and correct error
+@@ -442,7 +449,7 @@
+ 
+   /* make sure cpusets are available */
+ 
+-  sprintf(path, "%s/cpus", TROOTCPUSET_PATH);
++  sprintf(path, "%s/%scpus", TROOTCPUSET_PATH, CPUSET_PREFIX);
+ 
+   if (lstat(path, &statbuf) != 0)
+     {
+@@ -480,8 +487,8 @@
+ 
+     /* load cpus in root set */
+ 
+-    sprintf(path, "%s/cpus",
+-            TROOTCPUSET_PATH);
++    sprintf(path, "%s/%scpus",
++            TROOTCPUSET_PATH, CPUSET_PREFIX);
+ 
+     fp = fopen(path, "r");
+ 
+@@ -519,8 +526,8 @@
+ 
+       /* NOTE:  load 'boot' set */
+ 
+-      sprintf(path, "%s/boot/cpus",
+-              TROOTCPUSET_PATH);
++      sprintf(path, "%s/boot/%scpus",
++              TROOTCPUSET_PATH, CPUSET_PREFIX);
+ 
+       fp = fopen(path, "r");
+ 
+@@ -554,8 +561,8 @@
+ 
+       /* create new TORQUE cpus set */
+ 
+-      sprintf(path, "%s/cpus",
+-              TTORQUECPUSET_PATH);
++      sprintf(path, "%s/%scpus",
++              TTORQUECPUSET_PATH, CPUSET_PREFIX);
+ 
+       fp = fopen(path, "w");
+ 
+@@ -588,8 +595,8 @@
+ 
+     /* add all mems to torqueset */
+ 
+-    sprintf(path, "%s/mems",
+-            TROOTCPUSET_PATH);
++    sprintf(path, "%s/%smems",
++            TROOTCPUSET_PATH, CPUSET_PREFIX);
+ 
+     fp = fopen(path, "r");
+ 
+@@ -622,8 +629,8 @@
+ 
+       /* NOTE:  load 'boot' set */
+ 
+-      sprintf(path, "%s/boot/mems",
+-              TROOTCPUSET_PATH);
++      sprintf(path, "%s/boot/%smems",
++              TROOTCPUSET_PATH, CPUSET_PREFIX);
+ 
+       fp = fopen(path, "r");
+ 
+@@ -657,8 +664,8 @@
+ 
+       /* create new TORQUE mems set */
+ 
+-      sprintf(path, "%s/mems",
+-              TTORQUECPUSET_PATH);
++      sprintf(path, "%s/%smems",
++              TTORQUECPUSET_PATH, CPUSET_PREFIX);
+ 
+       fp = fopen(path, "w");
+ 
+@@ -1015,7 +1022,7 @@
+   /* don't "else return(FAILURE);" because the directory doesn't necessarily exist */
+ 
+   /* create the directory and copy the relevant memory data */
+-  snprintf(tmppath,sizeof(tmppath),"%s/mems",TTORQUECPUSET_PATH);
++  snprintf(tmppath,sizeof(tmppath),"%s/%smems",TTORQUECPUSET_PATH, CPUSET_PREFIX);
+   if (access(TTORQUECPUSET_PATH, F_OK) == 0)
+     {
+ 
+@@ -1040,7 +1047,7 @@
+         }
+ 
+       fclose(fd);
+-      snprintf(tmppath,sizeof(tmppath),"%s/mems",path);
++      snprintf(tmppath,sizeof(tmppath),"%s/%smems",path, CPUSET_PREFIX);
+       fd = fopen(tmppath, "w");
+       if (fd)
+         {
+@@ -1088,6 +1095,7 @@
+   vnodent *np;
+   int      j;
+   int      rc = SUCCESS;
++  int      tmppath_len;
+ 
+   char    *id = "create_vnodesets";
+   char     cpusbuf[MAXPATHLEN+1];
+@@ -1105,7 +1113,8 @@
+       mkdir(tmppath, 0755);
+       chmod(tmppath, 00755);
+       sprintf(tasksbuf, "%d", np->vn_index);
+-      strcat(tmppath, "/cpus");
++      tmppath_len=strlen(tmppath);
++      snprintf(tmppath+tmppath_len, sizeof(tmppath)-tmppath_len, "/%scpus", CPUSET_PREFIX);
+       sprintf(log_buffer, "TASKSET: %s cpus %s\n", tmppath, tasksbuf);
+       log_event(PBSEVENT_SYSTEM, 
+         PBS_EVENTCLASS_SERVER,
+@@ -1129,7 +1138,7 @@
+       memset(tasksbuf, '\0', sizeof(tasksbuf));
+ 
+       /* add all mems to torqueset - membuf has info stored */
+-      sprintf(tmppath, "%s/%d/%s",path,np->vn_node,"/mems");
++      sprintf(tmppath, "%s/%d/%smems",path,np->vn_node,CPUSET_PREFIX);
+       fd = fopen(tmppath, "w");
+ 
+       if (fd)
+@@ -1200,7 +1209,7 @@
+   get_cpu_string(pjob,cpusbuf);
+ #endif  /* end NUMA_SUPPORT */
+ 
+-  snprintf(tmppath,sizeof(tmppath),"%s/cpus",path);
++  snprintf(tmppath,sizeof(tmppath),"%s/%scpus",path, CPUSET_PREFIX);
+ 
+   sprintf(log_buffer, "CPUSET: %s job %s path %s\n", cpusbuf,
+           pjob->ji_qs.ji_jobid, tmppath);
+@@ -1231,7 +1240,7 @@
+ 
+     fclose(fd);
+ #ifdef NUMA_SUPPORT
+-    snprintf(tmppath,sizeof(tmppath),"%s/mems",path);
++    snprintf(tmppath,sizeof(tmppath),"%s/%smems",path, CPUSET_PREFIX);
+     fd = fopen(tmppath, "w");
+     if (fd)
+       {
+@@ -1705,7 +1714,7 @@
+ 
+   if (LOGLEVEL >= 6)
+     {
+-    sprintf(log_buffer, "cpuset %s/memory_pressure=%d", path, rc);
++    sprintf(log_buffer, "cpuset %s/%smemory_pressure=%d", path, CPUSET_PREFIX, rc);
+     log_record(PBSEVENT_DEBUG, 0, id, log_buffer);
+     }
+ 
+@@ -1714,9 +1723,10 @@
+   /* Construct the name of the cpuset's memory_pressure file */
+ 
+   if (cpusetname[0] == '/')
+-    snprintf(path, sizeof(path), "%s/memory_pressure", cpusetname);
++    snprintf(path, sizeof(path), "%s/%smemory_pressure", cpusetname, CPUSET_PREFIX);
+   else
+-    snprintf(path, sizeof(path), "%s/%s/memory_pressure", TTORQUECPUSET_PATH, cpusetname);
++    snprintf(path, sizeof(path), "%s/%s/%smemory_pressure", TTORQUECPUSET_PATH,
++             cpusetname, CPUSET_PREFIX);
+ 
+   /* Open, read, close */
+ 
