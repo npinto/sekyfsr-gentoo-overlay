@@ -862,7 +862,7 @@ diff -Nur ATLAS.orig/CONFIG/src/config.c ATLAS/CONFIG/src/config.c
              F77LIBdir = NewStringCopy(sp-2);
              F77LIBdir = NewAppendedString(F77LIBdir, "-l");
 -            F77LIBdir = NewAppendedString(F77LIBdir, f77lib);
-+            F77LIBdir = NewConcatenatedString(F77LIBdir, f77lib);
++            F77LIBdir = NewConcatenedString(F77LIBdir, f77lib);
              if (OSIsWin(OS))
                 F77LIBdir = NewAppendedString(F77LIBdir, "-lgcc");
              if (verb)
