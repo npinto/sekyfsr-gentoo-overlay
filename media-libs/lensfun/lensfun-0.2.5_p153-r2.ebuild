@@ -32,8 +32,9 @@ pkg_setup() {
 src_configure() {
 	mycmakeargs=(
 		$(cmake-utils_use_build doc)
-		-DLIBDIR=$(get_libdir)
-		-DDOCDIR=/usr/share/doc/${P}
+		-DLIBDIR=${EPREFIX}/$(get_libdir)
+		-DDOCDIR=${EPREFIX}/usr/share/doc/${P}
+		-DCMAKE_INSTALL_LIBDIR=${EPREFIX}/${get_libdir}
 	)
 	cmake-utils_src_configure
 }
