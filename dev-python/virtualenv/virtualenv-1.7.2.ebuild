@@ -17,7 +17,8 @@ KEYWORDS="amd64 ppc ppc64 x86 ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x
 SLOT="0"
 IUSE="doc"
 
-RDEPEND="dev-python/setuptools"
+RDEPEND="dev-python/setuptools
+	dev-python/virtualenv-clone"
 DEPEND="${DEPEND}
 		doc? ( dev-python/sphinx )
 		test? ( dev-python/mock )"
