@@ -1,12 +1,12 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI=4
 
 inherit multilib
 inherit versionator
 inherit python
-
-EAPI="2"
 
 MY_PV=$(get_version_component_range 1-2)
 DESCRIPTION="Shogun is a large scale machine learning toolbox and focus on large scale kernel methods such as Support Vector Machines (SVM)"
@@ -27,8 +27,7 @@ R? ( dev-lang/R )
 ruby? ( dev-lang/ruby )
 octave? ( sci-mathematics/octave )
 python? ( dev-lang/python
-          dev-lang/swig
-          =dev-python/numpy-1* )"
+         =dev-python/numpy-1* )"
 RDEPEND=""
 
 PYTHON_DEPEND="python? 2:2.6"
@@ -110,4 +109,3 @@ src_install() {
 	cd ${WORKDIR}/${P}/src || die
 	emake DESTDIR="${D}" install || die
 }
-

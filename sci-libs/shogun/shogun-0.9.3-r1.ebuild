@@ -1,18 +1,17 @@
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI=4
 
 inherit multilib
 inherit versionator
 inherit python
 
-EAPI="2"
-
 MY_PV=$(get_version_component_range 1-2)
 DESCRIPTION="Shogun is a large scale machine learning toolbox and focus on large scale kernel methods such as Support Vector Machines (SVM)"
 HOMEPAGE="http://shogun-toolbox.org"
-#SRC_URI="http://shogun-toolbox.org/archives/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
 SRC_URI="ftp://shogun-toolbox.org/shogun/releases/${MY_PV}/sources/${P}.tar.bz2"
-#SRC_URI="https://github.com/shogun-toolbox/shogun/tarball/shogun_0.9.3"
 
 LICENSE=""
 SLOT="0"
