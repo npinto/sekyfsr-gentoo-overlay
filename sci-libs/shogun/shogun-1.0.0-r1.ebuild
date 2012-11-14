@@ -21,6 +21,7 @@ IUSE="mono lua java R ruby octave python"
 DEPEND="
 sci-libs/gsl
 sci-mathematics/glpk
+sci-libs/superlu
 mono? ( dev-lang/mono )
 lua? ( dev-lang/lua )
 R? ( dev-lang/R )
