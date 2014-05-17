@@ -1,0 +1,13 @@
+--- unalz/Makefile	2007-08-06 01:08:22.000000000 +0900
++++ unalz/Makefile	2007-08-06 01:08:51.000000000 +0900
+@@ -33,6 +33,10 @@
+ 	$(CPP) -c UnAlz.cpp -c UnAlzUtils.cpp -c main.cpp $(CFLAGS)
+ 	$(CPP) $(OBJ) $(LDFLAGS) -o $(BIN)
+ 
++linux: unalz
++	$(CPP) -c UnAlz.cpp -c UnAlzUtils.cpp -c main.cpp -D_UNALZ_ICONV $(CFLAGS)
++	$(CPP) $(OBJ) $(LDFLAGS) -o $(BIN)
++
+ linux-utf8: unalz
+ 	$(CPP) -c UnAlz.cpp -c UnAlzUtils.cpp -c main.cpp -D_UNALZ_ICONV -D_UNALZ_UTF8 $(CFLAGS)
+ 	$(CPP) $(OBJ) $(LDFLAGS) -o $(BIN)
