@@ -1,0 +1,183 @@
+From 70ac5c7296da9eb5ccb151e0ebcb6db7600964ff Mon Sep 17 00:00:00 2001
+From: Clemens Korner <clemens.corny@gmail.com>
+Date: Tue, 16 Jul 2013 14:46:30 +0200
+Subject: [PATCH] added Index::addPoints to C and Python wrapper
+
+---
+ src/cpp/flann/flann.cpp            | 79 ++++++++++++++++++++++++++++++++++++++
+ src/cpp/flann/flann.h              | 26 +++++++++++++
+ src/python/pyflann/flann_ctypes.py | 12 ++++++
+ src/python/pyflann/index.py        |  7 ++++
+ 4 files changed, 124 insertions(+)
+
+diff --git a/src/cpp/flann/flann.cpp b/src/cpp/flann/flann.cpp
+index 46e1d25..e4dab4f 100644
+--- a/src/cpp/flann/flann.cpp
++++ b/src/cpp/flann/flann.cpp
+@@ -425,6 +425,85 @@ flann_index_t flann_load_index_int(char* filename, int* dataset, int rows, int c
+ }
+ 
+ 
++template<typename Distance>
++int __flann_add_points(flann_index_t index_ptr, typename Distance::ElementType* dataset,
++                       int rows, float rebuild_threshold)
++{
++    typedef typename Distance::ElementType ElementType;
++    try {
++        if (index_ptr==NULL) {
++            throw FLANNException("Invalid index");
++        }
++        Index<Distance>* index = (Index<Distance>*)index_ptr;
++        Matrix<ElementType> newPoints(dataset,rows,index->veclen());
++        index->addPoints(newPoints, rebuild_threshold);
++
++        return 0;
++    }
++    catch (std::runtime_error& e) {
++        Logger::error("Caught exception: %s\n",e.what());
++        return -1;
++    }
++
++    return -1;
++}
++
++template<typename T>
++int _flann_add_points(flann_index_t index_ptr, T* dataset,
++                       int rows, float rebuild_threshold)
++{
++    if (flann_distance_type==FLANN_DIST_EUCLIDEAN) {
++        return __flann_add_points<L2<T> >(index_ptr, dataset, rows, rebuild_threshold);
++    }
++    else if (flann_distance_type==FLANN_DIST_MANHATTAN) {
++        return __flann_add_points<L1<T> >(index_ptr, dataset, rows, rebuild_threshold);
++    }
++    else if (flann_distance_type==FLANN_DIST_MINKOWSKI) {
++        return __flann_add_points<MinkowskiDistance<T> >(index_ptr, dataset, rows, rebuild_threshold);
++    }
++    else if (flann_distance_type==FLANN_DIST_HIST_INTERSECT) {
++        return __flann_add_points<HistIntersectionDistance<T> >(index_ptr, dataset, rows, rebuild_threshold);
++    }
++    else if (flann_distance_type==FLANN_DIST_HELLINGER) {
++        return __flann_add_points<HellingerDistance<T> >(index_ptr, dataset, rows, rebuild_threshold);
++    }
++    else if (flann_distance_type==FLANN_DIST_CHI_SQUARE) {
++        return __flann_add_points<ChiSquareDistance<T> >(index_ptr, dataset, rows, rebuild_threshold);
++    }
++    else if (flann_distance_type==FLANN_DIST_KULLBACK_LEIBLER) {
++        return __flann_add_points<KL_Divergence<T> >(index_ptr, dataset, rows, rebuild_threshold);
++    }
++    else {
++        Logger::error( "Distance type unsupported in the C bindings, use the C++ bindings instead\n");
++        return -1;
++    }
++}
++
++int flann_add_points(flann_index_t index_ptr, float* dataset, int rows, float rebuild_threshold)
++{
++    return _flann_add_points(index_ptr, dataset, rows, rebuild_threshold);
++}
++
++int flann_add_points_float(flann_index_t index_ptr, float* dataset, int rows, float rebuild_threshold)
++{
++    return _flann_add_points(index_ptr, dataset, rows, rebuild_threshold);
++}
++
++int flann_add_points_double(flann_index_t index_ptr, double* dataset, int rows, float rebuild_threshold)
++{
++    return _flann_add_points(index_ptr, dataset, rows, rebuild_threshold);
++}
++
++int flann_add_points_byte(flann_index_t index_ptr, unsigned char* dataset, int rows, float rebuild_threshold)
++{
++    return _flann_add_points(index_ptr, dataset, rows, rebuild_threshold);
++}
++
++int flann_add_points_int(flann_index_t index_ptr, int* dataset, int rows, float rebuild_threshold)
++{
++    return _flann_add_points(index_ptr, dataset, rows, rebuild_threshold);
++}
++
+ 
+ template<typename Distance>
+ int __flann_find_nearest_neighbors(typename Distance::ElementType* dataset,  int rows, int cols, typename Distance::ElementType* testset, int tcount,
+diff --git a/src/cpp/flann/flann.h b/src/cpp/flann/flann.h
+index 90d1cf8..8ba4865 100644
+--- a/src/cpp/flann/flann.h
++++ b/src/cpp/flann/flann.h
+@@ -202,6 +202,32 @@ FLANN_EXPORT flann_index_t flann_load_index_int(char* filename,
+                                                 int cols);
+ 
+ 
++FLANN_EXPORT int flann_add_points(flann_index_t index_ptr,
++                                  float* dataset,
++                                  int rows,
++                                  float rebuild_threshold);
++
++FLANN_EXPORT int flann_add_points_float(flann_index_t index_ptr,
++                                        float* dataset,
++                                        int rows,
++                                        float rebuild_threshold);
++
++FLANN_EXPORT int flann_add_points_double(flann_index_t index_ptr,
++                                         double* dataset,
++                                         int rows,
++                                         float rebuild_threshold);
++
++FLANN_EXPORT int flann_add_points_byte(flann_index_t index_ptr,
++                                       unsigned char* dataset,
++                                       int rows,
++                                       float rebuild_threshold);
++
++FLANN_EXPORT int flann_add_points_int(flann_index_t index_ptr,
++                                      int* dataset,
++                                      int rows,
++                                      float rebuild_threshold);
++
++
+ /**
+    Builds an index and uses it to find nearest neighbors.
+ 
+diff --git a/src/python/pyflann/flann_ctypes.py b/src/python/pyflann/flann_ctypes.py
+index b060f51..4443b6c 100644
+--- a/src/python/pyflann/flann_ctypes.py
++++ b/src/python/pyflann/flann_ctypes.py
+@@ -247,6 +247,18 @@ def define_functions(str):
+ flann.load_index[%(numpy)s] = flannlib.flann_load_index_%(C)s
+ """)
+ 
++flann.add_points = {}
++define_functions(r"""
++flannlib.flann_add_points_%(C)s.restype = None
++flannlib.flann_add_points_%(C)s.argtypes = [
++        FLANN_INDEX, # index_id
++        ndpointer(%(numpy)s, ndim = 2, flags='aligned, c_contiguous'), # dataset
++        c_int, # rows
++        c_int, # rebuild_threshhold
++]
++flann.add_points[%(numpy)s] = flannlib.flann_add_points_%(C)s
++""")
++
+ flann.find_nearest_neighbors = {}    
+ define_functions(r"""                          
+ flannlib.flann_find_nearest_neighbors_%(C)s.restype = c_int
+diff --git a/src/python/pyflann/index.py b/src/python/pyflann/index.py
+index a587f34..697adf7 100644
+--- a/src/python/pyflann/index.py
++++ b/src/python/pyflann/index.py
+@@ -200,6 +200,13 @@ def load_index(self, filename, pts):
+         self.__curindex_data = pts
+         self.__curindex_type = pts.dtype.type
+ 
++    def add_points(self, pts, rebuild_threshold=2):
++        if not pts.dtype.type in allowed_types:
++            raise FLANNException("Cannot handle type: %s"%pts.dtype)
++        pts = ensure_2d_array(pts,default_flags)
++        npts, dim = pts.shape
++        flann.add_points[self.__curindex_type](self.__curindex, pts, npts, rebuild_threshold)
++
+     def nn_index(self, qpts, num_neighbors = 1, **kwargs):
+         """
+         For each point in querypts, (which may be a single point), it
+-- 
+1.9.3
+

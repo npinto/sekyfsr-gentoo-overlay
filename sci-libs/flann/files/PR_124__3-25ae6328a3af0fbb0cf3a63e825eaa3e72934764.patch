@@ -1,0 +1,32 @@
+From 25ae6328a3af0fbb0cf3a63e825eaa3e72934764 Mon Sep 17 00:00:00 2001
+From: Clemens Korner <clemens.corny@gmail.com>
+Date: Thu, 25 Jul 2013 08:52:17 +0200
+Subject: [PATCH] possibility to change params in add_points
+
+---
+ src/python/pyflann/index.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/python/pyflann/index.py b/src/python/pyflann/index.py
+index 4397af4..3036b1e 100644
+--- a/src/python/pyflann/index.py
++++ b/src/python/pyflann/index.py
+@@ -200,12 +200,14 @@ def load_index(self, filename, pts):
+         self.__curindex_data = pts
+         self.__curindex_type = pts.dtype.type
+ 
+-    def add_points(self, pts, rebuild_threshold=2):
++    def add_points(self, pts, rebuild_threshold=2, **kwargs):
+         if not pts.dtype.type in allowed_types:
+             raise FLANNException("Cannot handle type: %s"%pts.dtype)
+         pts = ensure_2d_array(pts,default_flags)
+         npts, dim = pts.shape
+ 
++        self.__flann_parameters.update(kwargs)
++
+         speedup = c_float(0)
+ 
+         flann.add_points[self.__curindex_type](self.__curindex, pts, npts, rebuild_threshold, byref(speedup), pointer(self.__flann_parameters))
+-- 
+1.9.3
+
