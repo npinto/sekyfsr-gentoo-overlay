@@ -40,6 +40,10 @@ pkg_setup() {
 	enewuser rethinkdb 71 /bin/bash /var/lib/rethinkdb rethinkdb
 }
 
+src_prepare() {
+	epatch "${FILESDIR}/issue2511.patch"
+}
+
 src_configure() {
 	./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/usr/var termcap=-lncurses
 }

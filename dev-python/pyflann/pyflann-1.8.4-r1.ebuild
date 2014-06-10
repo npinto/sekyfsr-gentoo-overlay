@@ -26,7 +26,6 @@ DEPEND="${RDEPEND}
 	test? ( dev-python/nose[${PYTHON_USEDEP}] )"
 
 S="${WORKDIR}"/flann-${PV}-src
-#S="${WORKDIR}/flann-${PV}-src/src/python"
 
 PATCHES=(
 	"${FILESDIR}"/PR_124__1-70ac5c7296da9eb5ccb151e0ebcb6db7600964ff.patch
@@ -35,7 +34,7 @@ PATCHES=(
 )
 
 python_prepare_all() {
-	cd "${S}/src/python"
+	cd "${WORKDIR}"/flann-${PV}-src/src/python
 	sed -e "s/@FLANN_VERSION@/${PV}/" \
 		-e '/package_d/d' \
 		-e "s/,.*'pyflann.lib'//" \
